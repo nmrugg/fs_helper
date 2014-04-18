@@ -1,0 +1,20 @@
+{
+  "name": "fs_helper",
+  "description": "Extension to fs",
+  "version": "0.1.0",
+  "author": {
+    "name": "Nathan Rugg",
+    "email": "nmrugg@gmail.com"
+  },
+  "keywords": [
+    "fs"
+  ],
+  "main": "fs_helper.js",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://nate.mit-license.org/"
+    }
+  ],
+  "readmeFilename": "readme.md"
+}
