@@ -3,7 +3,7 @@
 "use strict";
 
 var crypto = require("crypto"),
-    girdle = require("girdle.js"),
+    girdle = require("girdle"),
     fs = require("fs"),
     p = require("path");
 
