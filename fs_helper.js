@@ -196,6 +196,8 @@ function md5(path, cb)
     var hasher = crypto.createHash("md5"),
         read_stream = fs.ReadStream(path);
     
+    console.log("Depreciated: Use .hash()");
+    
     read_stream.on("data", function ondata(data)
     {
         hasher.update(data);
@@ -204,6 +206,33 @@ function md5(path, cb)
     read_stream.on("end", function onend()
     {
         cb(hasher.digest("hex"));
+    });
+}
+
+function hash(path, hash, enc, cb)
+{
+    var hasher,
+        read_stream = fs.ReadStream(path);
+    
+    if (typeof hash === "function") { /// Is hash and enc missing?
+        cb = hash;
+        hash = "md5";
+        enc = "hex";
+    } else if (typeof enc === "function") { /// Is enc missing?
+        cb = enc;
+        enc = "hex";
+    }
+    
+    hasher = crypto.createHash(hash),
+    
+    read_stream.on("data", function ondata(data)
+    {
+        hasher.update(data);
+    });
+    
+    read_stream.on("end", function onend()
+    {
+        cb(hasher.digest(enc));
     });
 }
 
@@ -243,6 +272,7 @@ module.exports = {
     fs: fs,
     get_all_dirs: get_all_dirs,
     get_all_files: get_all_files,
+    hash: hash,
     make_dir_if_none: make_dir_if_none,
     make_path: make_path,
     md5: md5,
