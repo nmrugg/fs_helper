@@ -231,6 +231,11 @@ function rm_r(path, cb)
     });
 }
 
+function realbase(path)
+{
+    return p.basename(path, p.extname(path));
+}
+
 module.exports = {
     copy: copy,
     exists: exists,
@@ -242,5 +247,6 @@ module.exports = {
     make_path: make_path,
     md5: md5,
     read_JSON: read_JSON,
+    realbase: realbase,
     rm_r: rm_r,
 };
