@@ -267,12 +267,14 @@ function realbase(path)
 
 module.exports = {
     copy: copy,
+    dir_exists: dir_exists,
     exists: exists,
     filesize: filesize,
     fs: fs,
     get_all_dirs: get_all_dirs,
     get_all_files: get_all_files,
     hash: hash,
+    is_dir: is_dir,
     make_dir_if_none: make_dir_if_none,
     make_path: make_path,
     md5: md5,
