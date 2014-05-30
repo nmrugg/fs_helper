@@ -42,7 +42,7 @@ function exists(paths, cb)
         fs.exists(path, function oncheck(exists)
         {
             if (exists) {
-                next()
+                next();
             } else {
                 cb(false);
             }
@@ -98,16 +98,16 @@ function dir_exists(path, cb)
 function make_path(path, cb)
 {
     var parts = path.split(p.sep),
-        path = "";
+        build_path = "";
     
     girdle.async_loop(parts, cb, function onpart(part, next)
     {
         if (!part) {
-            path = p.join(path, "/");
+            build_path = p.join(build_path, "/");
             return next();
         }
-        path = p.join(path, part);
-        make_dir_if_none(path, next);
+        build_path = p.join(build_path, part);
+        make_dir_if_none(build_path, next);
     });
 }
 
@@ -190,7 +190,7 @@ function md5(path, cb)
     var hasher = crypto.createHash("md5"),
         read_stream = fs.ReadStream(path);
     
-    console.log("Depreciated: Use .hash(path, [hash,] [enc,] cb)");
+    console.log("Depreciated: Use .hash(path, [algorithm,] [enc,] cb)");
     
     read_stream.on("data", function ondata(data)
     {
@@ -203,21 +203,21 @@ function md5(path, cb)
     });
 }
 
-function hash(path, hash, enc, cb)
+function hash(path, algorithm, enc, cb)
 {
     var hasher,
         read_stream = fs.ReadStream(path);
     
-    if (typeof hash === "function") { /// Are hash and enc missing?
-        cb = hash;
-        hash = "md5";
+    if (typeof algorithm === "function") { /// Are hash and enc missing?
+        cb = algorithm;
+        algorithm = "md5";
         enc = "hex";
     } else if (typeof enc === "function") { /// Is enc missing?
         cb = enc;
         enc = "hex";
     }
     
-    hasher = crypto.createHash(hash);
+    hasher = crypto.createHash(algorithm);
     
     read_stream.on("data", function ondata(data)
     {
@@ -234,10 +234,16 @@ function rm_r(path, cb)
 {
     is_dir(path, function onres(err, dir)
     {
+        if (err) {
+            return cb(err);
+        }
         if (dir) {
             /// Delete everything in it.
             fs.readdir(path, function onread(err, files)
             {
+                if (err) {
+                    return cb(err);
+                }
                 files.forEach(function oneach(file, i)
                 {
                     files[i] = p.join(path, file);
@@ -245,7 +251,7 @@ function rm_r(path, cb)
                 
                 girdle.async_loop(files, function ondel()
                 {
-                    fs.rmdir(path, cb)
+                    fs.rmdir(path, cb);
                 }, rm_r);
             });
         } else {
