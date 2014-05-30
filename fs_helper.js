@@ -217,7 +217,7 @@ function hash(path, hash, enc, cb)
         enc = "hex";
     }
     
-    hasher = crypto.createHash(hash),
+    hasher = crypto.createHash(hash);
     
     read_stream.on("data", function ondata(data)
     {
