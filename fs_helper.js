@@ -190,7 +190,7 @@ function md5(path, cb)
     var hasher = crypto.createHash("md5"),
         read_stream = fs.ReadStream(path);
     
-    console.log("Depreciated: Use .hash()");
+    console.log("Depreciated: Use .hash(path, [hash,] [enc,] cb)");
     
     read_stream.on("data", function ondata(data)
     {
@@ -208,7 +208,7 @@ function hash(path, hash, enc, cb)
     var hasher,
         read_stream = fs.ReadStream(path);
     
-    if (typeof hash === "function") { /// Is hash and enc missing?
+    if (typeof hash === "function") { /// Are hash and enc missing?
         cb = hash;
         hash = "md5";
         enc = "hex";
