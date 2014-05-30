@@ -182,13 +182,7 @@ function get_all_files(path, cb)
 
 function read_JSON(path)
 {
-    var json;
-    
-    try {
-        json = JSON.parse(fs.readFileSync(path, "utf8"));
-    } catch (e) {}
-    
-    return json;
+    return girdle.parse_json(fs.readFileSync(path, "utf8"));
 }
 
 function md5(path, cb)
