@@ -265,6 +265,18 @@ function realbase(path)
     return p.basename(path, p.extname(path));
 }
 
+function is_link(path, cb)
+{
+    fs.lstat(path, function onstat(err, stats)
+    {
+        if (err) {
+            cb(err);
+        } else {
+            cb(null, stats.isSymbolicLink());
+        }
+    });
+}
+
 module.exports = {
     copy: copy,
     dir_exists: dir_exists,
@@ -275,6 +287,7 @@ module.exports = {
     get_all_files: get_all_files,
     hash: hash,
     is_dir: is_dir,
+    is_link: is_link,
     make_dir_if_none: make_dir_if_none,
     make_path: make_path,
     md5: md5,
