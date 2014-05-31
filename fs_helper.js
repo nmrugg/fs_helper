@@ -232,30 +232,41 @@ function hash(path, algorithm, enc, cb)
 
 function rm_r(path, cb)
 {
-    is_dir(path, function onres(err, dir)
+    is_link(path, function onres(err, link)
     {
         if (err) {
             return cb(err);
         }
-        if (dir) {
-            /// Delete everything in it.
-            fs.readdir(path, function onread(err, files)
+        if (link) {
+            /// Just remove the link, don't enter into symlink directories.
+            fs.unlink(path, cb);
+        } else {
+            is_dir(path, function onres(err, dir)
             {
                 if (err) {
                     return cb(err);
                 }
-                files.forEach(function oneach(file, i)
-                {
-                    files[i] = p.join(path, file);
-                });
-                
-                girdle.async_loop(files, function ondel()
-                {
-                    fs.rmdir(path, cb);
-                }, rm_r);
+                if (dir) {
+                    /// Delete everything in it.
+                    fs.readdir(path, function onread(err, files)
+                    {
+                        if (err) {
+                            return cb(err);
+                        }
+                        files.forEach(function oneach(file, i)
+                        {
+                            files[i] = p.join(path, file);
+                        });
+                        
+                        girdle.async_loop(files, function ondel()
+                        {
+                            fs.rmdir(path, cb);
+                        }, rm_r);
+                    });
+                } else {
+                    fs.unlink(path, cb);
+                }
             });
-        } else {
-           fs.unlink(path, cb);
         }
     });
 }
