@@ -1,7 +1,7 @@
 {
   "name": "fs_helper",
   "description": "Extension to fs",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": {
     "name": "Nathan Rugg",
     "email": "nmrugg@gmail.com"
