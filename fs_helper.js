@@ -182,7 +182,10 @@ function get_all_files(path, cb)
 
 function read_JSON(path)
 {
-    return girdle.parse_json(fs.readFileSync(path, "utf8"));
+    /// If the file does not exist, it will throw.
+    try {
+        return girdle.parse_json(fs.readFileSync(path, "utf8"));
+    } catch (e) {}
 }
 
 function md5(path, cb)
