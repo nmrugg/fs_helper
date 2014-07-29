@@ -10,10 +10,16 @@ var crypto = require("crypto"),
 function copy(orig_path, new_path, cb)
 {
     var read_stream  = fs.createReadStream(orig_path),
-        write_stream = fs.createWriteStream(new_path);
+        write_stream = fs.createWriteStream(new_path),
+        closed;
     
     function done(err)
     {
+        if (!closed) {
+            read_stream.close();
+            write_stream.close();
+            closed = true;
+        }
         /// Prevent double calls on errors and closing.
         if (cb) {
             cb(err);
