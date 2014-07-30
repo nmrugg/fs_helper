@@ -56,6 +56,32 @@ function exists(paths, cb)
     });
 }
 
+function rm(paths, cb)
+{
+    var errs;
+    
+    if (typeof paths === "string") {
+        paths = [paths];
+    }
+    
+    girdle.async_loop(paths, function ondone()
+    {
+        cb(errs);
+    }, function oneach(path, next, i)
+    {
+        fs.unlink(path, function oncheck(err)
+        {
+            if (err) {
+                if (!errs) {
+                    errs = [];
+                }
+                errs[i] = err;
+            }
+            setImmediate(next);
+        });
+    });
+}
+
 function filesize(path, cb)
 {
     fs.stat(path, function onstat(err, stats)
@@ -314,4 +340,5 @@ module.exports = {
     read_JSON: read_JSON,
     realbase: realbase,
     rm_r: rm_r,
+    rm: rm,
 };
