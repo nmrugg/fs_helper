@@ -66,7 +66,9 @@ function rm(paths, cb)
     
     girdle.async_loop(paths, function ondone()
     {
-        cb(errs);
+        if (cb) {
+            cb(errs);
+        }
     }, function oneach(path, next, i)
     {
         fs.unlink(path, function oncheck(err)
@@ -146,6 +148,8 @@ function make_path(path, cb)
 
 function make_dir_if_none(path, cb)
 {
+    cb = cb || function () {};
+    
     dir_exists(path, function onres(err, exists)
     {
         if (err) {
@@ -267,6 +271,8 @@ function hash(path, algorithm, enc, cb)
 
 function rm_r(path, cb)
 {
+    cb = cb || function () {};
+    
     is_link(path, function onres(err, link)
     {
         if (err) {
