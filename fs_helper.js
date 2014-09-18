@@ -183,7 +183,7 @@ function get_all_of(path, dirs, cb)
                 if (!err && ((dirs && dir) || (!dirs && !dir))) {
                     paths[paths.length] = new_path;
                 }
-                next();
+                setImmediate(next);
             });
         });
     });
@@ -242,6 +242,11 @@ function hash(path, algorithm, enc, cb)
 
 function rm_r(path, cb)
 {
+    function imcb()
+    {
+        setImmediate(cb);
+    }
+    
     cb = cb || function () {};
     
     is_link(path, function onres(err, link)
@@ -251,7 +256,7 @@ function rm_r(path, cb)
         }
         if (link) {
             /// Just remove the link, don't enter into symlink directories.
-            fs.unlink(path, cb);
+            fs.unlink(path, imcb);
         } else {
             is_dir(path, function onres(err, dir)
             {
@@ -272,11 +277,11 @@ function rm_r(path, cb)
                         
                         girdle.async_loop(files, function ondel()
                         {
-                            fs.rmdir(path, cb);
+                            fs.rmdir(path, imcb);
                         }, rm_r);
                     });
                 } else {
-                    fs.unlink(path, cb);
+                    fs.unlink(path, imcb);
                 }
             });
         }
