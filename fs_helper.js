@@ -343,6 +343,7 @@ module.exports = {
     make_dir_if_none: make_dir_if_none,
     make_path: make_path,
     md5: md5,
+    p: p,
     read_JSON: read_JSON,
     realbase: realbase,
     rm_r: rm_r,
