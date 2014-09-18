@@ -162,9 +162,9 @@ function make_dir_if_none(path, cb)
     });
 }
 
-function get_all_dirs(path, cb)
+function get_all_of(path, dirs, cb)
 {
-    var dirs = [];
+    var paths = [];
     
     fs.readdir(path, function onread(err, files)
     {
@@ -174,14 +174,14 @@ function get_all_dirs(path, cb)
         
         girdle.async_loop(files, function ondone()
         {
-            cb(dirs);
+            cb(paths);
         }, function oneach(file, next)
         {
             var new_path = p.join(path, file);
             
             is_dir(new_path, function onres(err, dir) {
-                if (!err && dir) {
-                    dirs[dirs.length] = new_path;
+                if (!err && ((dirs && dir) || (!dirs && !dir))) {
+                    paths[paths.length] = new_path;
                 }
                 next();
             });
@@ -189,31 +189,14 @@ function get_all_dirs(path, cb)
     });
 }
 
+function get_all_dirs(path, cb)
+{
+    get_all_of(path, true, cb);
+}
+
 function get_all_files(path, cb)
 {
-    var just_files = [];
-    
-    fs.readdir(path, function onread(err, files)
-    {
-        if (err) {
-            throw err;
-        }
-        
-        girdle.async_loop(files, function ondone()
-        {
-            cb(just_files);
-        }, function oneach(file, next)
-        {
-            var new_path = p.join(path, file);
-            
-            is_dir(new_path, function onres(err, dir) {
-                if (!err && !dir) {
-                    just_files[just_files.length] = new_path;
-                }
-                next();
-            });
-        });
-    });
+    get_all_of(path, false, cb);
 }
 
 function read_JSON(path)
@@ -226,20 +209,8 @@ function read_JSON(path)
 
 function md5(path, cb)
 {
-    var hasher = crypto.createHash("md5"),
-        read_stream = fs.ReadStream(path);
-    
-    console.log("Depreciated: Use .hash(path, [algorithm,] [enc,] cb)");
-    
-    read_stream.on("data", function ondata(data)
-    {
-        hasher.update(data);
-    });
-    
-    read_stream.on("end", function onend()
-    {
-        cb(hasher.digest("hex"));
-    });
+    console.log("Depreciated: Use .hash(path, [algorithm, [enc,]] cb)");
+    hash(path, cb);
 }
 
 function hash(path, algorithm, enc, cb)
