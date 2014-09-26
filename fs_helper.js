@@ -199,12 +199,20 @@ function get_all_files(path, cb)
     get_all_of(path, false, cb);
 }
 
-function read_JSON(path)
+function read_JSON(path, cb)
 {
-    /// If the file does not exist, it will throw.
-    try {
-        return girdle.parse_json(fs.readFileSync(path, "utf8"));
-    } catch (e) {}
+    /// Is this async?
+    if (cb) {
+        fs.readFile(path, "utf8", function onread(err, data)
+        {
+            cb(girdle.parse_json(data));
+        });
+    } else {
+        /// If the file does not exist, it will throw.
+        try {
+            return girdle.parse_json(fs.readFileSync(path, "utf8"));
+        } catch (e) {}
+    }
 }
 
 function md5(path, cb)
