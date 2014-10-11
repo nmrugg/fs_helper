@@ -96,6 +96,18 @@ function filesize(path, cb)
     });
 }
 
+function modified_time(path, cb)
+{
+    fs.stat(path, function onstat(err, stats)
+    {
+        if (err) {
+            cb(null);
+        } else {
+            cb(stats.mtime && stats.mtime.getTime ? stats.mtime.getTime() : null);
+        }
+    });
+}
+
 function is_dir(path, cb)
 {
     fs.stat(path, function onstat(err, stats)
@@ -327,6 +339,7 @@ module.exports = {
     make_dir_if_none: make_dir_if_none,
     make_path: make_path,
     md5: md5,
+    modified_time: modified_time,
     p: p,
     read_JSON: read_JSON,
     realbase: realbase,
