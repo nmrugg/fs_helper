@@ -18,6 +18,6 @@
   ],
   "readmeFilename": "readme.md",
   "dependencies": {
-    "girdle": "^0.1.12"
+    "girdle": "=0.1.15"
   }
 }
